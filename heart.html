@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Heart by BroProger</title>
+    <meta charset="utf-8">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: black;
+            color: #fff;
+            font-family: "Archivo Black", sans-serif;
+            font-size: 3em;
+            text-align: center;
+        }
+
+        #canvas-container {
+            width: 1090px;
+            display: flex;
+            justify-content: center;
+        }
+
+        canvas {
+            width: 1090px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <canvas id="c" width="1090"></canvas>
+    </div>
+
+    <script>
+        var c = document.getElementById('c');
+        var a = c.getContext('2d');
+        var O = c.width;
+        var Q = c.height = window.innerHeight;
+        
+        var v = 32;
+        var M = Math;
+        var R = M.random;
+        var C = M.cos;
+        var Y = 6.3;
+        var e = [];
+        var h = [];
+
+        for (var i = 0; i < Y; i += 0.2) {
+            h.push([
+                O / 2 + 180 * M.pow(M.sin(i), 3),
+                Q / 2 + 10 * (-(15 * C(i) - 5 * C(2 * i) - 2 * C(3 * i) - C(4 * i)))
+            ]);
+        }
+
+        for (var i = 0; i < v; i++) {
+            var x = R() * O;
+            var y = R() * Q;
+            var H = i / v * 80 + 280;
+            var S = R() * 50 + 80;
+            var B = R() * 50 + 40;
+            var f = [];
+
+            for (var k = 0; k < v; k++) {
+                f[k] = {
+                    x: x,
+                    y: y,
+                    X: 0,
+                    Y: 0,
+                    R: (1 - k / v) + 1,
+                    S: R() + 1,
+                    q: ~~(R() * v),
+                    D: i % 2 * 2 - 1,
+                    F: R() * 0.2 + 0.7,
+                    f: "hsla(" + ~~H + "," + ~~S + "%," + ~~B + "%,.5)"
+                };
+            }
+            e[i] = f;
+        }
+
+        function render(_) {
+            a.fillStyle = _.f;
+            a.beginPath();
+            a.arc(_.x, _.y, _.R, 0, Y, 1);
+            a.closePath();
+            a.fill();
+        }
+
+        function loop() {
+            a.fillStyle = "rgba(0,0,0,.2)";
+            a.fillRect(0, 0, O, Q);
+
+            for (var i = 0; i < v; i++) {
+                var f = e[i];
+                var u = f[0];
+                var q = h[u.q];
+                var D = u.x - q[0];
+                var E = u.y - q[1];
+                var G = M.sqrt((D * D) + (E * E));
+
+                if (G < 10) {
+                    if (R() > 0.95) {
+                        u.q = ~~(R() * v);
+                    } else {
+                        if (R() > 0.99) u.D *= -1;
+                        u.q = (u.q + u.D + v) % v;
+                    }
+                }
+
+                u.X += -D / G * u.S;
+                u.Y += -E / G * u.S;
+                u.x += u.X;
+                u.y += u.Y;
+
+                render(u);
+                u.X *= u.F;
+                u.Y *= u.F;
+
+                for (var k = 1; k < v; k++) {
+                    var T = f[k - 1];
+                    var N = f[k];
+
+                    N.x -= (N.x - T.x) * 0.7;
+                    N.y -= (N.y - T.y) * 0.7;
+
+                    render(N);
+                }
+            }
+        }
+
+        (function animate() {
+            requestAnimationFrame(animate);
+            loop();
+        })();
+    </script>
+</body>
+</html>
