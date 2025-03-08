@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Heart by BroProger</title>
+    <title>By Ёжик</title>
     <meta charset="utf-8">
     <style>
         html, body {
@@ -22,17 +22,28 @@
             width: 1090px;
             display: flex;
             justify-content: center;
+            flex-direction: column;
         }
 
         canvas {
             width: 1090px;
-            height: auto;
+            height: 90vh;
+        }
+
+        .text {
+            font-size: 24px;
+            font-family: 'Arimo', sans-serif;
+            color: rgb(252, 255, 68);
+        }
+        .text span {
+            color: rgb(226, 48, 48);
         }
     </style>
 </head>
 <body>
     <div id="canvas-container">
         <canvas id="c" width="1090"></canvas>
+        <h1 class="text">С праздником кит! <span>&#9829;</span></h1>
     </div>
 
     <script>
